@@ -13,10 +13,10 @@ contract Game {
     /*this function calls the randomNumber function, checks the condition for winning
     and returns the appropriate message as a string.
     Note: the generated random number can only be seen when the play function is called. It will be seen in console*/
-    function play(uint numberGotten) public view returns(string memory) {
+    function play(uint _numberGotten) public view returns(string memory) {
         uint rand = randomNumber();
         console.log("the random number is ", rand);
-        if((rand >= numberGotten && rand - numberGotten == uint(5)) || (rand <= numberGotten && numberGotten - rand == uint(5))) {
+        if((rand >= _numberGotten && rand - _numberGotten == uint(5)) || (rand <= _numberGotten && _numberGotten - rand == uint(5))) {
             return "Congratulations! You won";
         }
         return "Oops:( you didn't win, thank you for participating";
