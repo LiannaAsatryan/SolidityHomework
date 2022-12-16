@@ -27,10 +27,10 @@ contract Shareholders {
     function addShareholder(address payable _address, uint8 _persantage) public onlyOwner {
         require(_persantage <= 100, "Invalid persantage");
         require(addressToPercantage[_address] == 0, "This person is already a shareholder");
+        require(sumOfAllPersantages + _persantage <= 100, "somethng is wrong with percantages");
         addressToPercantage[_address] = _persantage;
         shareholders.push(_address);
-        sumOfAllPersantages += _persantage; 
-        require(sumOfAllPersantages <= 100, "somethng is wrong with percantages");
+        sumOfAllPersantages += _persantage;
     }
     
     /** @dev removes the shareholder, the function can call only the owner
