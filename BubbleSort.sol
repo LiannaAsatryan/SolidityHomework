@@ -5,14 +5,6 @@ import "@ganache/console.log/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract BubbleSort{
-    /** @dev prints the given array in console
-        @param _array the given array */
-    function printArray(int[] memory _array) private view{
-        for(uint i = 0; i < _array.length; i++) {
-            string memory a = Strings.toString(uint(_array[i]));
-            console.log(a);
-        }
-    }
 
     /** @dev sorts the given array by acsending order with bubble sorting algorithm and and finds the largests(with given quantity) of them
       * @param _array the given array
@@ -33,14 +25,21 @@ contract BubbleSort{
         printArray(_array);*/
 
         int[] memory newArr = new int[](_number);
-        uint index = 0;
         for(uint i = _array.length - _number; i < _array.length; i++) {
-            newArr[index] = _array[i];
-            index++;
+            newArr[i - (_array.length - _number)] = _array[i];
         }
         //prints the result
         /*console.log("The result array");
         printArray(newArr);*/
         return newArr;
+    }
+
+    /** @dev prints the given array in console
+        @param _array the given array */
+    function printArray(int[] memory _array) private view{
+        for(uint i = 0; i < _array.length; i++) {
+            string memory a = Strings.toString(uint(_array[i]));
+            console.log(a);
+        }
     }
 }
