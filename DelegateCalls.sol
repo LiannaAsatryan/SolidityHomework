@@ -11,22 +11,22 @@ interface BusdInterface {
 }
 
 contract Caller {
-    address BUSDcontractAddress = 0x53549245A794E1d939fd153cC7A925f626D9848d;
-    
+    address BUSDcontractAddress = 0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee;
+
     //calls of the functions
-    function callTotalSupply() public view returns(uint256) {
+    function callTotalSupply() external view returns(uint256) {
         return BusdInterface(BUSDcontractAddress).totalSupply();
     }
-    function callDecimals() public view returns(uint8) {
+    function callDecimals() external view returns(uint8) {
         return BusdInterface(BUSDcontractAddress).decimals();
     }
-    function callBalanceOf(address _accountAddress) public view returns(uint256) {
+    function callBalanceOf(address _accountAddress) external view returns(uint256) {
         return BusdInterface(BUSDcontractAddress).balanceOf(_accountAddress);
     }
-    function callApprove(address _spenderAddress, uint256 _amount) public returns(bool) {
+    function callApprove(address _spenderAddress, uint256 _amount) external returns(bool) {
         return BusdInterface(BUSDcontractAddress).approve(_spenderAddress, _amount);
     }
-    function callTransfer(address _recipientAddress, uint256 _amount) public returns(bool) {
+    function callTransfer(address _recipientAddress, uint256 _amount) external returns(bool) {
         return BusdInterface(BUSDcontractAddress).transfer(_recipientAddress, _amount);
     }
 }
