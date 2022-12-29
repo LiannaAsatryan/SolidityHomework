@@ -1,11 +1,16 @@
 //SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.15;
+pragma solidity ^0.8.15;
 
 contract Shareholders {
    
-    constructor(){
-        owner = payable(msg.sender);
+    constructor(address electionAddress){
+        owner = electionAddress;
+    }
+
+    modifier onlyOwner{
+        require(msg.sender == owner, "Shareholders: This operation can do only the owner!");
+        _;
     }
 
      /** @dev receives the money and splits to the shateholders with corresponding percantages*/
@@ -16,7 +21,7 @@ contract Shareholders {
         }
     }
 
-    address payable owner;
+    address owner;
     mapping(address => uint8) private addressToPercantage;
     address payable[] private shareholders;
     uint8 private sumOfAllPersantages;
@@ -24,10 +29,10 @@ contract Shareholders {
     /** @dev adds a new shareholder, the function can call only the owner
         @param _address the address of the new shareholder
         @param _persantage the percantage of the new shareholder*/
-    function addShareholder(address payable _address, uint8 _persantage) external{
-        require(_persantage <= 100, "Invalid persantage");
-        require(addressToPercantage[_address] == 0, "This person is already a shareholder");
-        require(sumOfAllPersantages + _persantage < 100, "somethng is wrong with percantages");
+    function addShareholder(address payable _address, uint8 _persantage) external onlyOwner{
+        require(_persantage <= 100, "Shareholder: Invalid percentage");
+        require(addressToPercantage[_address] == 0, "Shareholder: This person is already a shareholder");
+        require(sumOfAllPersantages + _persantage < 100, "Shareholder: Something is wrong with percentages");
         addressToPercantage[_address] = _persantage;
         shareholders.push(_address);
         sumOfAllPersantages += _persantage; 
@@ -36,14 +41,9 @@ contract Shareholders {
     /** @dev removes the shareholder, the function can call only the owner
         @param _address the address of the new shareholder*/
     function removeShareholder(address _address) public onlyOwner {
-        require(addressToPercantage[_address] != 0, "This shareholder doesn't exist");
+        require(addressToPercantage[_address] != 0, "Shareholder: This shareholder doesn't exist");
         uint8 percantage = addressToPercantage[_address];
         addressToPercantage[_address] = 0;
         sumOfAllPersantages -= percantage;
     }  
-
-    modifier onlyOwner{
-        require(msg.sender == owner, "This operation can do only the owner!");
-        _;
-    }
 }
