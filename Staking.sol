@@ -15,8 +15,7 @@ contract Staking{
     mapping(address => bool) isUser;
     User[] users;
     uint256 tokenCount = 100; //the number of tokens a staker will receive in a second as reward
-    uint256 startTime;        //the time of first deposit
-    uint256 ts;                 
+    uint256 startTime;        //the time of first deposit         
     bool hasStarted;
     address tokenAddress; //the address of deployed MyERC20Token contract 
 
@@ -68,17 +67,20 @@ contract Staking{
         }
     }
 
-    /** @dev the claim function gives the user staked ethers and it also calls the claim function
+    /** @dev the claim function gives the user staked ethers and rewards
       *Requirements: only stakers can call this function, and they must have some ethers to receive**/
     function withdraw() public onlyStaker{
         updateRewards();
         for(uint i = 0; i < users.length; i++) {
             if(users[i].userAddress == msg.sender) {
                require(users[i].userStakeAmount > 0, "Staking: No ether to withdraw!");
-               payable(msg.sender).transfer(users[i].userStakeAmount); 
+               payable(msg.sender).transfer(users[i].userStakeAmount);
+               totalStake -= users[i].userStakeAmount;   
+               if(users[i].unclaimedReward > 0) {
+                    IYVN(tokenAddress).transfer(msg.sender, users[i].unclaimedReward);
+                    users[i].unclaimedReward = 0;
+               }
                isUser[msg.sender] = false;
-               totalStake -= users[i].userStakeAmount;
-               claim();
                break;
             }
         }
@@ -89,10 +91,9 @@ contract Staking{
     function updateRewards() private {
         for(uint i = 0; i < users.length; i++) {
             if(isUser[users[i].userAddress]) {
-               ts = block.timestamp;
-               users[i].unclaimedReward += ((ts - startTime) * tokenCount * users[i].userStakeAmount / totalStake);
+               users[i].unclaimedReward += ((block.timestamp - startTime) * tokenCount * users[i].userStakeAmount / totalStake);
                startTime = block.timestamp;
             }
         }
     }
-}     
+}       
